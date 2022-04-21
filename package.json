@@ -1,0 +1,22 @@
+{
+  "name": "projeto11-tweteroo",
+  "version": "1.0.0",
+  "description": "Tweteroo - Twitter clone POC",
+  "type": "module",
+  "main": "script.js",
+  "scripts": {
+    "start": "nodemon src/server.js",
+    "dev": "concurrently \"npm start\" \"live-server --host=localhost\" ",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "Nivaldo Farias",
+  "license": "ISC",
+  "devDependencies": {
+    "chalk": "^5.0.1",
+    "concurrently": "^7.1.0",
+    "cors": "^2.8.5",
+    "express": "^4.17.3",
+    "nodemon": "^2.0.15"
+  }
+}
