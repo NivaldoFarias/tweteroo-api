@@ -1,6 +1,6 @@
 # Frontend files
 css/
-assets/
+/assets/
 index.html
 script.js
 
