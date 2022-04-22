@@ -6,7 +6,7 @@
   "main": "script.js",
   "scripts": {
     "start": "nodemon src/server/index.js",
-    "dev": "concurrently \"npm start\" \"live-server --host=localhost\" ",
+    "dev": "live-server --host=localhost --port=3000 --watch=css/style.css",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],

@@ -1,11 +1,12 @@
 import express from "express";
+import cors from "cors";
 import chalk from "chalk";
 import * as fs from "fs";
 import os from "os";
 
 import * as utils from "./../utils/index.js";
 
-const app = express().use(express.json());
+const app = express().use(express.json()).use(cors());
 const PORT = process.env.PORT || 5000;
 const USERS_PATH = "src/data/users.json";
 const TWEETS_PATH = "src/data/tweets.json";
@@ -13,12 +14,11 @@ const TWEETS_PATH = "src/data/tweets.json";
 app.get("/tweets", (req, res) => {
   if (
     Object.keys(req.query).length &&
-    (!req.query.page || isNaN(req.query.page) || req.query.page <= 1)
+    (!req.query.page || isNaN(req.query.page))
   ) {
     res.status(400).send("Informe uma página válida!");
     return;
   }
-  console.log();
   const page = req.query.page || 1;
   const tweets = JSON.parse(fs.readFileSync(TWEETS_PATH, "utf8"));
   const users = JSON.parse(fs.readFileSync(USERS_PATH, "utf8"));
@@ -30,13 +30,19 @@ app.get("/tweets/:username", (req, res) => {
   const { username: reqUser } = req.params;
   const tweets = JSON.parse(fs.readFileSync(TWEETS_PATH, "utf8"));
   const users = JSON.parse(fs.readFileSync(USERS_PATH, "utf8"));
-  const output = utils.handleTweets(tweets, users);
+  const output = utils.includeAvatar(tweets, users);
   res.send(output.filter((tweet) => tweet.username === reqUser));
 });
 
 app.post("/sign-up", (req, res) => {
   const { username, avatar } = req.body;
-  if (!username || !avatar) {
+  const fileData = JSON.parse(fs.readFileSync(USERS_PATH));
+
+  if (fileData.find((user) => user.username === username) && !avatar) {
+    res.status(200).send("OK");
+    console.log(chalk.bold.yellow(`User "${username}" logged in!`));
+    return;
+  } else if (!username || !avatar) {
     res.status(400).send("Todos os campos são obrigatórios!");
     return;
   } else if (!utils.validUrl(avatar) || !utils.validImage(avatar)) {
@@ -44,7 +50,6 @@ app.post("/sign-up", (req, res) => {
     return;
   }
 
-  const fileData = JSON.parse(fs.readFileSync(USERS_PATH));
   fileData.push(req.body);
 
   fs.writeFile(USERS_PATH, JSON.stringify(fileData, null, 2), (err) => {

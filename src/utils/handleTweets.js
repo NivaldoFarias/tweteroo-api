@@ -16,5 +16,5 @@ export default function handleTweets(tweets, users, page) {
     const user = users.find((user) => user.username === tweet.username);
     tweet.avatar = user.avatar;
   }
-  return output;
+  return output.reverse();
 }
