@@ -3,6 +3,7 @@ export default function handleTweets(tweets, users, page) {
   let queryStartPoint;
   const length = tweets.length;
   const queryEndPoint = length - 10 * (page - 1);
+  if (page * 10 > length + 10) return null;
 
   page * 10 > length
     ? (queryStartPoint = 0)

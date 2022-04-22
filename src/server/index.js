@@ -23,6 +23,10 @@ app.get("/tweets", (req, res) => {
   const tweets = JSON.parse(fs.readFileSync(TWEETS_PATH, "utf8"));
   const users = JSON.parse(fs.readFileSync(USERS_PATH, "utf8"));
   const output = utils.handleTweets(tweets, users, page);
+  if (!output) {
+    res.status(404).send({ error: "Não há tweets para essa página!" });
+    return;
+  }
   res.send(output);
 });
 
@@ -79,7 +83,7 @@ app.post("/tweets", (req, res) => {
       chalk.bold.yellow(`Tweet "${tweet}" by user "${username}" created!`)
     );
   });
-  res.status(201).send("OK");
+  res.status(201).send("Created");
 });
 
 app.listen(PORT, () => {
