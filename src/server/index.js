@@ -2,7 +2,7 @@ import express from "express";
 import cors from "cors";
 import chalk from "chalk";
 import * as fs from "fs";
-import os from "os";
+import urlExist from "url-exist";
 
 import * as utils from "./../utils/index.js";
 
@@ -49,7 +49,10 @@ app.post("/sign-up", (req, res) => {
   } else if (!username || !avatar) {
     res.status(400).send("Todos os campos são obrigatórios!");
     return;
-  } else if (!utils.validUrl(avatar) || !utils.validImage(avatar)) {
+  } else if (
+    (!utils.validUrl(avatar) || !utils.validImage(avatar)) &&
+    urlExist(avatar)
+  ) {
     res.sendStatus(400);
     return;
   }
